@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Stack;
@@ -27,9 +28,9 @@ public class AesTest {
         System.out.println(encrypt);
         System.out.println(decrypt);
 
-        for (int i = 0; i < 1; i++) {
-            encrypt("C:/Users/Administrator/Documents/Learn-ASE/gradlew");
-        }
+//        for (int i = 0; i < 1; i++) {
+//            encrypt("C:/Users/Administrator/Documents/Learn-ASE/gradlew");
+//        }
     }
 
     public static void encrypt(String path) {
@@ -61,5 +62,41 @@ public class AesTest {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Test
+    public void directoryEncryptTest() {
+        AES.setKey("ase");
+        String resourcesPath = "C:/Users/Ryuu/Documents/Learn-ASE/src/main/resources";
+        String filePath = "C:/Users/Ryuu/Documents/Learn-ASE/src/main/resources/ase/test";
+        String relativePath = filePath.replaceFirst(resourcesPath, "");
+        if (relativePath.startsWith("/")) {
+            relativePath = relativePath.substring(1);
+        }
+        String[] directories = relativePath.split("/");
+        ArrayList<String> encryptDirectories = new ArrayList<>();
+        for (String directory : directories) {
+            encryptDirectories.add(AES.encrypt(directory));
+        }
+        System.out.println(Arrays.toString(directories));
+        System.out.println(encryptDirectories);
+        StringBuilder encryptPath = new StringBuilder(resourcesPath);
+        for (String encryptDirectory : encryptDirectories) {
+            encryptPath.append("/").append(encryptDirectory);
+        }
+        System.out.println(encryptPath);
+    }
+
+    @Test
+    public void fileEncryptTest() {
+        AES.setKey("ase");
+        String filePath = "C:/Users/Ryuu/Documents/Learn-ASE/src/main/resources/ase/test/ase.txt";
+        int indexOfSlash = filePath.lastIndexOf("/");
+        String fileName = filePath.substring(indexOfSlash + 1);
+        System.out.println(fileName);
+        String encrypt = AES.encrypt(fileName);
+        System.out.println(encrypt);
+        String decrypt = AES.decrypt(encrypt);
+        System.out.println(decrypt);
     }
 }
