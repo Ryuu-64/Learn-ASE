@@ -37,7 +37,6 @@ public class AES {
         return null;
     }
 
-
     public static String encrypt(final String string) {
         return Base64.getUrlEncoder().encodeToString(encrypt(string.getBytes(StandardCharsets.UTF_8)));
     }
